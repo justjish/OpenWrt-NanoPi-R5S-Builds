@@ -9,25 +9,26 @@ fi
 BUILDDIR="$ROOTDIR/build"
 
 cd "$BUILDDIR/openwrt"
-OPENWRT_BRANCH=23.05
+OPENWRT_BRANCH=main
 
 # -------------- UBOOT -----------------------------------
 # replace uboot with immortalwrt uboot package
 # this version does not need arm-trusted-firmware-rk3328
 rm -rf package/boot/uboot-rockchip
 cp -R $ROOTDIR/immortalwrt-$OPENWRT_BRANCH/package/boot/uboot-rockchip package/boot/
-#cp -R $ROOTDIR/openwrt-$OPENWRT_BRANCH/patches/package/uboot-rockchip package/boot/
 
 # -------------- ARM TRUSTED FIRMWARE -------------------
-# replace uboot with local uboot package
+# replace uboot with immortal uboot package
 # this version does not need arm-trusted-firmware-rk3328
 rm -rf package/boot/arm-trusted-firmware-rockchip
-cp -R $ROOTDIR/openwrt-$OPENWRT_BRANCH/patches/package/arm-trusted-firmware-rockchip package/boot/
+cp -R $ROOTDIR/immortalwrt-$OPENWRT_BRANCH/package/boot/arm-trusted-firmware-rockchip package/boot/
 
 
 # -------------- target linux/rockchip ----------------
 rm -rf target/linux/rockchip
-cp -R $ROOTDIR/openwrt-$OPENWRT_BRANCH/patches/target/linux/rockchip target/linux/
+# replace rockchip with immortal rockchip package
+# this version does not need arm-trusted-firmware-rk3328
+cp -R $ROOTDIR/immortalwrt-$OPENWRT_BRANCH/target/linux/rockchip target/linux/
 
 # replace target rockchip with original one
 #cp -R $BUILDDIR/openwrt-fresh-$OPENWRT_BRANCH/target/linux/rockchip target/linux/
@@ -37,15 +38,14 @@ cp -R $ROOTDIR/openwrt-$OPENWRT_BRANCH/patches/target/linux/rockchip target/linu
 # ------------------ packages ------------------------------------
 
 # r8125 driver for r5s
-cp -R $ROOTDIR/openwrt-$OPENWRT_BRANCH/patches/package/r8125 package/kernel/
+cp -R $ROOTDIR/immortalwrt-$OPENWRT_BRANCH/package/kernel/r8125 package/kernel/
 
 # enable armv8 crypto for mbedtls
-cp $ROOTDIR/openwrt-$OPENWRT_BRANCH/patches/package/mbedtls/patches/200-Implements-AES-and-GCM-with-ARMv8-Crypto-Extensions.patch \
-   package/libs/mbedtls/patches/
+cp $ROOTDIR/immortalwrt-$OPENWRT_BRANCH/package/libs/mbedtls/patches/200-Implements-AES-and-GCM-with-ARMv8-Crypto-Extensions.patch package/libs/mbedtls/patches/
 
 # video modules
 rm -rf package/kernel/linux/modules/video.mk
-cp $ROOTDIR/openwrt-$OPENWRT_BRANCH/patches/package/kernel/linux/modules/video.mk package/kernel/linux/modules/
+cp $ROOTDIR/immortalwrt-$OPENWRT_BRANCH/package/kernel/linux/modules/video.mk package/kernel/linux/modules/
 
 # add caiaq usb sound module for shairport with old soundcard
 ADDON_PATH='snd-usb-caiaq.makefileaddon'
@@ -63,26 +63,6 @@ cp $BUILDDIR/openwrt-fresh-$OPENWRT_BRANCH/target/linux/generic/config-5.15 targ
 cp $BUILDDIR/openwrt-fresh-$OPENWRT_BRANCH/target/linux/generic/config-6.1 target/linux/generic/config-6.1
 
 cat << "EOF" >> target/linux/generic/config-6.1
-# CONFIG_IR_ENE is not set
-# CONFIG_IR_FINTEK is not set
-# CONFIG_IR_GPIO_TX is not set
-# CONFIG_IR_IMON_DECODER is not set
-# CONFIG_IR_ITE_CIR is not set
-# CONFIG_IR_MCE_KBD_DECODER is not set
-# CONFIG_IR_NUVOTON is not set
-# CONFIG_IR_PWM_TX is not set
-# CONFIG_IR_RCMM_DECODER is not set
-# CONFIG_IR_SANYO_DECODER is not set
-# CONFIG_IR_SHARP_DECODER is not set
-# CONFIG_IR_SPI is not set
-# CONFIG_IR_WINBOND_CIR is not set
-# CONFIG_IR_XMP_DECODER is not set
-# CONFIG_MEDIA_CEC_RC is not set
-# CONFIG_MTD_SBC_GXX is not set
-EOF
-
-
-cat << "EOF" >> target/linux/generic/config-5.15
 # CONFIG_IR_ENE is not set
 # CONFIG_IR_FINTEK is not set
 # CONFIG_IR_GPIO_TX is not set
