@@ -84,7 +84,7 @@ jobs:
 
       - name: Set GITHUB_ENV
         run: |
-          echo "TZ=Europe/Paris" >>$GITHUB_ENV
+          echo "TZ=America/New_York" >>$GITHUB_ENV
           echo "BUILD_STRING=${{ needs.init.outputs.build_string }}" >> $GITHUB_ENV
           echo "RELTAG=${{ needs.init.outputs.release_tag }}" >> $GITHUB_ENV
           echo "OPENWRT_BRANCH=${{ github.event.inputs.openwrt_branch }}" >> $GITHUB_ENV
@@ -206,7 +206,7 @@ jobs:
         with:
           name: OpenWrt ${{ env.OPENWRT_BRANCH }} ${{ env.BUILD_STRING }}
           allowUpdates: true
-          tag: OpenWrtAO-${{ env.OPENWRT_BRANCH }}-${{ env.RELTAG }}
+          tag: OpenWrt-${{ env.OPENWRT_BRANCH }}-${{ env.RELTAG }}
           commit: main
           replacesArtifacts: true
           token: ${{ secrets.GITHUB_TOKEN }}
